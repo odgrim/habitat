@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # wrapper for loading dirs or files into our env
-load_config_path() {
+load_module_path() {
   # set the option indicator var
   OPTIND=1
 
@@ -29,11 +29,12 @@ load_config_path() {
 
 # load a dirs contents into the current env
 # will load recursively if the second argument is true
-load_config_dir() { 
+load_module_dir() { 
 	load_path="$1"
 	recursive="$2"
 
-	for config in $(ls "$load_path"/*); do
+	# depth first loading of module directories
+	for config in $(ls "$load_path"/*.{sh, bash}); do
 		# make sure we can run the bash file
 		if [[ [[ -d "$config" ]] && "$recursive" ]]; then
 			load_config_dir "$config" "$recursive"
@@ -44,7 +45,7 @@ load_config_dir() {
 }
 
 # load target file into the current env
-load_config_file() { 
+load_module() { 
 	load_path="$1"
 
 	# path is a file

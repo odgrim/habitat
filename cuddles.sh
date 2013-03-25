@@ -1,72 +1,57 @@
 #!/bin/bash
 
-load_config_path()
-{ # wrapper for loading dirs or files into our env
+# wrapper for loading dirs or files into our env
+load_config_path() {
+  # set the option indicator var
+  OPTIND=1
 
-	ARGS=$(getopt -o p:r -l "path:,recursive" -n "cuddles" -- "$@");
+  # loop through our named ops
+  while getopts "p:r" opt; do
+    case "$opt" in
+      p) load_path="$OPTARG"
+        ;;
+      r) recursive=true
+        ;;
+    esac
+  done
 
-	if [ $? -ne 0 ];
-	then
-		#exit if getopt failed/we got bad args
-		#exit 1
-		echo "error in getopt!"
-	fi
+  # shift off the remaining options and optional --
+  shift $((OPTIND-1))
 
-	eval set -- "$ARGS";
-
-  	local recursive=false 
-  	local load_path=''
-
-	while [[ $# -gt 0 ]] ; do
-		local token="$1" ; shift
-		case "$token" in
-		  -p|--path)
-			load_path=$1
-			;;
-		  -r|--recursive)
-			recursive=true
-			;;
-		  *)
-			true # Ignore everything else.
-			;;
-		esac
-	done
-
-	if [ -d $load_path ]; then
+	if [[ -d "$load_path" ]]; then
 		# path is a directory
-		load_config_dir $load_path $recursive
-	elif [ -f $load_path ]; then
+		load_config_dir "$load_path" [[ -z $recursive ]]
+	elif [[ -f "$load_path" ]]; then
 		# path is a file
-		load_config_file $load_path	
+		load_config_file "$load_path"	
 	fi
 }
 
-load_config_dir()
-{ # load a dirs contents into the current env
-  # will load recursively if the second argument is true
+# load a dirs contents into the current env
+# will load recursively if the second argument is true
+load_config_dir() { 
+	load_path="$1"
+	recursive="$2"
 
-	local load_path=$1
-	local recursive=$2
-
-	for config in $load_path/*; do
+	for config in $(ls "$load_path"/*); do
 		# make sure we can run the bash file
-		if [ -d $config ] && $recursive ; then
-			load_config_dir $config $recursive
-			continue
-		fi
-		load_config_file $config
+		if [[ [[ -d "$config" ]] && "$recursive" ]]; then
+			load_config_dir "$config" "$recursive"
+		else
+		  load_config_file "$config"
+    fi
 	done
 }
 
-load_config_file()
-{ # load target file into the current env
+# load target file into the current env
+load_config_file() { 
+	load_path="$1"
 
-	local load_path=$1
 	# path is a file
-	if [ ! -x "$load_path" ]; then
+	if [[ ! -x "$load_path" ]]; then
 		echo "error loading $load_path, check your syntax."
 	else
 		# it loads fine, so bring it in!
-		. $load_path
+		. "$load_path"
 	fi
 }

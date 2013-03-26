@@ -1,56 +1,48 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # wrapper for loading dirs or files into our env
-load_module_path() {
-  # set the option indicator var
-  OPTIND=1
+load_modules() {
+  # loop through args and hand off to helper if a dir or file
+  while [[ $# -gt 0 ]]; do
+    local token="$1" ; shift
 
-  # loop through our named ops
-  while getopts "p:r" opt; do
-    case "$opt" in
-      p) load_path="$OPTARG"
-        ;;
-      r) recursive=true
-        ;;
-    esac
-  done
-
-  # shift off the remaining options and optional --
-  shift $((OPTIND-1))
-
-	if [[ -d "$load_path" ]]; then
-		# path is a directory
-		load_config_dir "$load_path" [[ -z $recursive ]]
-	elif [[ -f "$load_path" ]]; then
-		# path is a file
-		load_config_file "$load_path"	
+    if [[ -d "$token" ]]; then
+		load_module_dir "$token"
+	elif [[ -f "$token" ]]; then
+		load_module_file "$token"
+	else 
+		echo "module $token not found"
 	fi
+  done
+}
+
+# conveniance wrapper...
+load_module() {
+	load_modules $@
 }
 
 # load a dirs contents into the current env
-# will load recursively if the second argument is true
-load_module_dir() { 
+load_module_dir() {
 	load_path="$1"
-	recursive="$2"
 
-	# depth first loading of module directories
-	for config in $(ls "$load_path"/*.{sh, bash}); do
-		# make sure we can run the bash file
-		if [[ [[ -d "$config" ]] && "$recursive" ]]; then
-			load_config_dir "$config" "$recursive"
-		else
-		  load_config_file "$config"
+	init_path="${load_path}/init.*"
+
+	if [ -e $init_path ] && [ -f $init_path ]; then
+		load_module_file $init_path
+	else
+		echo "module $load_path can not load. Did you forget an init.sh?"
     fi
-	done
 }
 
 # load target file into the current env
-load_module() { 
+load_module_file() { 
 	load_path="$1"
-
-	# path is a file
-	if [[ ! -x "$load_path" ]]; then
-		echo "error loading $load_path, check your syntax."
+	if [[ ! -f "$load_path" ]]; then
+		echo "error loading $load_path, does not exist!"
+		return 1
+	elif [[ ! -x "$load_path" ]]; then
+		echo "error loading $load_path, make sure it's executable!"
+		return 1
 	else
 		# it loads fine, so bring it in!
 		. "$load_path"

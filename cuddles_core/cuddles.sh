@@ -1,9 +1,23 @@
 #!/usr/bin/env bash
 
 cuddles () {
-
+  # loop through args and hand off proper helper
+  local token="$1" ; shift
+  case "$token" in
+    load)
+      __cuddles_load_modules $@
+      ;;
+    help)
+      __cuddles_help
+    *)
+      echo ""
+  done
 }
 
+__cuddles_help () {
+  cat ./README.md
+
+}
 # wrapper for loading dirs or files into our env
 __cuddles_load_modules() {
   # loop through args and hand off to helper if a dir or file
@@ -11,12 +25,12 @@ __cuddles_load_modules() {
     local token="$1" ; shift
 
     if [[ -d "$token" ]]; then
-    load_module_dir "$token"
-  elif [[ -f "$token" ]]; then
-    load_module_file "$token"
-  else 
-    echo "module $token not found"
-  fi
+      load_module_dir "$token"
+    elif [[ -f "$token" ]]; then
+      load_module_file "$token"
+    else 
+      echo "module $token not found"
+    fi
   done
 }
 

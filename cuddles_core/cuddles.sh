@@ -9,9 +9,12 @@ cuddles () {
       ;;
     help)
       __cuddles_help
+      ;;
     *)
       echo ""
-  done
+      ;;
+  esac
+  
 }
 
 __cuddles_help () {

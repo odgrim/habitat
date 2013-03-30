@@ -10,7 +10,7 @@ __cuddles_completion ()
 
   case "$prev" in
     load)
-      local full_module_paths=( ~/cuddles/*/init.sh )
+      local full_module_paths=( ~/cuddles/$cur*/init.sh )
       for x in ${full_module_paths[@]}; do 
         # get rid of the path leading to our cuddles location
         local this_path=${x/$CUDDLES_DIR\/}

@@ -4,7 +4,7 @@ __cuddles_completion ()
   # Pointer to current completion word.
   # By convention, it's named "cur" but this isn't strictly necessary.
   
-  CUDDLES_DIR=$HOME/cuddles
+  CUDDLES_DIR="$HOME/.cuddles"
   COMPREPLY=()   # Array variable storing the possible completions.
   
   cur=${COMP_WORDS[COMP_CWORD]}
@@ -19,7 +19,7 @@ __cuddles_completion ()
     ;;
     load)
       # glob to grab everything with an init.sh
-      COMPREPLY=( ~/cuddles/${cur}*/init.sh )
+      COMPREPLY=( $CUDDLES_DIR/${cur}*/init.sh )
       # Trim the ~/.cuddles that prepends the path
       COMPREPLY=("${COMPREPLY[@]#"$CUDDLES_DIR"/}")
       # and then get rid of the init.sh to leave just a module name

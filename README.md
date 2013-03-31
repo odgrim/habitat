@@ -25,7 +25,7 @@ cuddles load module_name
 
 ##Actions
 - load		:: loads a cuddles module or any bash file
-- install   :: sets cuddles to manage your bashrc, bash_profile, bash_logon and bash_logout
+- install	:: sets cuddles to manage your bashrc, bash_profile, bash_logon and bash_logout
 
 
 ## Implementation

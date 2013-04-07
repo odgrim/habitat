@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-habitat () {
+__habitat () {
   # loop through args and hand off proper helper
   local token="$1" ; shift
   case "$token" in
@@ -18,7 +18,7 @@ habitat () {
 }
 
 # load a dirs contents into the current env
-__habitat_load_module() {
+habitat() {
   local load_path="$1"
 
   if  [[ -d $load_path ]]; then

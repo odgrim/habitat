@@ -1,5 +1,5 @@
 # habitat
-###Making a home from a shell.
+###Turning a shell into a home.
 The habitat project is designed as a simple and easy way to manage bashrc, bash_profile or any other collection of bash scripts that are normally taken as a profile of sorts... Work, debug, webdev etc.
 
 ## Install

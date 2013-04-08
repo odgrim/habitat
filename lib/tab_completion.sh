@@ -1,10 +1,10 @@
-__cuddles_completion ()
+__habitat_completion ()
 {
   local cur prev
   # Pointer to current completion word.
   # By convention, it's named "cur" but this isn't strictly necessary.
   
-  CUDDLES_DIR="$HOME/.cuddles"
+  HABITAT_DIR="$HOME/.habitat"
   COMPREPLY=()   # Array variable storing the possible completions.
   
   cur=${COMP_WORDS[COMP_CWORD]}
@@ -13,15 +13,15 @@ __cuddles_completion ()
   shopt -s extglob nullglob
   
   case "$prev" in
-    cuddles)
+    habitat)
       COMPREPLY=( $( compgen -W 'load' -- $cur ) )
       return 0      
     ;;
     load)
       # glob to grab everything with an init.sh
-      COMPREPLY=( $CUDDLES_DIR/${cur}*/init.sh )
-      # Trim the ~/.cuddles that prepends the path
-      COMPREPLY=("${COMPREPLY[@]#"$CUDDLES_DIR"/}")
+      COMPREPLY=( $HABITAT_DIR/${cur}*/init.sh )
+      # Trim the ~/.habitat that prepends the path
+      COMPREPLY=("${COMPREPLY[@]#"$habitat_DIR"/}")
       # and then get rid of the init.sh to leave just a module name
       COMPREPLY=("${COMPREPLY[@]%/init.sh}")      
     ;;
@@ -31,4 +31,4 @@ __cuddles_completion ()
   return 0
 }
 
-complete -o filenames -F __cuddles_completion cuddles
+complete -o filenames -F __habitat_completion habitat

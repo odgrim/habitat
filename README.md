@@ -29,6 +29,8 @@ Like in real life, doing something to your habitat leaves some sort of footprint
 #####habitat
 - load		:: loads a habitat module or any bash file
 - undo		:: pop the last change from the environment
+- test		:: run the tests for this module!
+
 
 ## Implementation
 Pure BASH!

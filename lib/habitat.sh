@@ -14,7 +14,6 @@ __habitat () {
       echo ""
       ;;
   esac
-  
 }
 
 # load a dirs contents into the current env

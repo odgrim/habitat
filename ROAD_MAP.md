@@ -30,6 +30,9 @@ clear_var VAR_NAME value
 
 
 
-
 #LOADING
 load_module
+
+
+#Testing
+We pretty much need to test everything. Always O_o

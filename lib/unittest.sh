@@ -8,17 +8,40 @@
 # print_result- 
 # 
 # 
-# 
-# 
-# 
-# 
-
 
 run_all_tests(){
+    echo ''
+}
 
+queue_test(){
+    echo ''
 }
 
 run_test(){
+  	if (${1}); then
+  		print_result
+  	else
+  		print_result -f
+  	fi
+}
 
+print_result(){
+    tput bold;
+    if [[ "$1" = "-f" ]]; then             
+        shift
+        tput setaf 1
+    else
+        tput setaf 2
+    fi
+
+    if [[ $# -ge 1 ]]; then
+    	local out_value=$@
+    else
+    	local out_value="."
+    fi
+
+    echo $out_value
+    tput setaf 3
+    tput sgr0
 }
 

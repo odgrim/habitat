@@ -18,11 +18,15 @@ queue_test(){
 }
 
 run_test(){
-  	if (${1}); then
-  		print_result
-  	else
-  		print_result -f
-  	fi
+    local exec_result=(
+        ${@} 
+    )
+    echo ${exec_result[@]}
+    if [[ -z "$exec_result" ]]; then
+        print_result
+    else
+        print_result -f
+    fi
 }
 
 print_result(){
@@ -35,9 +39,9 @@ print_result(){
     fi
 
     if [[ $# -ge 1 ]]; then
-    	local out_value=$@
+        local out_value=$@
     else
-    	local out_value="."
+        local out_value="."
     fi
 
     echo $out_value

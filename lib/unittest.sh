@@ -18,34 +18,45 @@ queue_test(){
 }
 
 run_test(){
-    local exec_result=(
-        ${@} 
-    )
-    echo ${exec_result[@]}
-    if [[ -z "$exec_result" ]]; then
-        print_result
-    else
-        print_result -f
-    fi
+  $@ | capture_test_output
+  echo ${exec_result[@]}
+  if [[ -z "$exec_result" ]]; then
+    print_result
+  else
+    print_result -f
+  fi
 }
 
+capture_test_output(){
+  # grab last pipe status with PIPESTATUS
+  # get input from read
+  # if pipestatus is non-0, print stack
+  local test_return=${PIPESTATUS[@]}
+  local i=0
+  while read line
+  do
+    all_output[ $i ]="$line"
+    (( i++ ))
+  done
+  echo ${all_output[@]}
+}
 print_result(){
-    tput bold;
-    if [[ "$1" = "-f" ]]; then             
-        shift
-        tput setaf 1
-    else
-        tput setaf 2
-    fi
+  tput bold;
+  if [[ "$1" = "-f" ]]; then
+    shift
+    tput setaf 1
+  else
+    tput setaf 2
+  fi
 
-    if [[ $# -ge 1 ]]; then
-        local out_value=$@
-    else
-        local out_value="."
-    fi
+  if [[ $# -ge 1 ]]; then
+    local out_value=$@
+  else
+    local out_value="."
+  fi
 
-    echo $out_value
-    tput setaf 3
-    tput sgr0
+  echo $out_value
+  tput setaf 3
+  tput sgr0
 }
 

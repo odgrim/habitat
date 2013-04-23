@@ -28,18 +28,22 @@ run_test(){
 }
 
 capture_test_output(){
-  # grab last pipe status with PIPESTATUS
-  # get input from read
-  # if pipestatus is non-0, print stack
-  local test_return=${PIPESTATUS[@]}
-  local i=0
-  while read line
-  do
-    all_output[ $i ]="$line"
-    (( i++ ))
-  done
-  echo ${all_output[@]}
+  # grab last pipe status with PIPESTATUS array
+  local test_return=${PIPESTATUS[${#PIPESTATUS[@]}-1]}
+
+  # TODO: Revert this, put a ! in front.
+  # Taken away for ease of debugging
+  if [[ $test_return ]]; then
+    local i=0
+    while read line
+    do
+      all_output[ $i ]="$line"
+      (( i++ ))
+    done
+    echo ${all_output[@]}
+  fi
 }
+
 print_result(){
   tput bold;
   if [[ "$1" = "-f" ]]; then

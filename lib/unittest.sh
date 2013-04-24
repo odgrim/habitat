@@ -19,28 +19,25 @@ queue_test(){
 
 run_test(){
   $@ | capture_test_output
-  echo ${exec_result[@]}
-  if [[ -z "$exec_result" ]]; then
-    print_result
-  else
-    print_result -f
-  fi
+  #echo ${exec_result[@]}
 }
 
 capture_test_output(){
   # grab last pipe status with PIPESTATUS array
   local test_return=${PIPESTATUS[${#PIPESTATUS[@]}-1]}
-
   # TODO: Revert this, put a ! in front.
   # Taken away for ease of debugging
-  if [[ $test_return ]]; then
+  if [[ ! $test_return ]]; then
     local i=0
     while read line
     do
       all_output[ $i ]="$line"
       (( i++ ))
     done
+    print_result -f
     echo ${all_output[@]}
+  else
+    print_result
   fi
 }
 

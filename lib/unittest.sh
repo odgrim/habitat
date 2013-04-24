@@ -22,11 +22,16 @@ run_test(){
   #echo ${exec_result[@]}
 }
 
+diff_env() {
+  local current_env=`env`
+
+  echo `diff <( $1 ) <( $current_env )`
+}
+
 capture_test_output(){
   # grab last pipe status with PIPESTATUS array
   local test_return=${PIPESTATUS[${#PIPESTATUS[@]}-1]}
-  # TODO: Revert this, put a ! in front.
-  # Taken away for ease of debugging
+
   if [[ ! $test_return ]]; then
     local i=0
     while read line
